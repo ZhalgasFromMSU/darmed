@@ -1,7 +1,6 @@
 from __future__ import annotations
 import telebot.types as types
 import typing
-from dataclasses import dataclass
 
 from bot import TBot
 

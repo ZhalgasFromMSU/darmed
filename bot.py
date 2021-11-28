@@ -28,7 +28,7 @@ class TBot(threading.Thread, telebot.TeleBot):
     def chat_state(self):
         return self._chat_state
 
-    def register_initial_action(self, scenario):
+    def register_initial_action(self, callback: typing.Callable[[types.Message], None]):
         """What should be done after user sends "/start"
         """
-        self.register_message_handler(scenario.get_scenario_beginning(), commands=["start"])
+        self.register_message_handler(callback, commands=["start"])

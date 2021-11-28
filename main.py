@@ -31,7 +31,7 @@ def main():
         ],
         "Ваша зявка на рассмотрении",
     )
-    bot.register_initial_action(scenario)
+    bot.register_initial_action(scenario.get_scenario_beginning())
     bot.start()
     time.sleep(20)
     bot.stop()
