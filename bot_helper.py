@@ -6,9 +6,16 @@ from bot import TBot
 
 
 class TScenarioItem:
-    def __init__(self, ask_text: str, register_key: str, keyboard_rows: typing.Optional[typing.List[str]] = None):
+    def __init__(self,
+                 ask_text: str,
+                 register_key: str,
+                 value_type: typing.Type = None,
+                 key_filter: typing.Callable[[typing.Any], bool] = None,
+                 keyboard_rows: typing.Optional[typing.List[str]] = None):
         self._ask_text = ask_text
         self._register_key = register_key
+        self._value_type = value_type
+        self._key_filter = key_filter
         self._keyboard = None
         if keyboard_rows is not None:
             self._keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True)
@@ -26,6 +33,8 @@ class TScenarioItem:
 
     def get_register_function(self, bot: TBot) -> typing.Callable[[types.Message], None]:
         def ret_func(message: types.Message):
+            register_message: self._value_type = self._value_type(message.text)
+            if self._key_filter is not None and:
             bot.register_chat_state(message.chat.id, self._register_key, message.text)
             if self._next_ask is not None:
                 self._next_ask(message.chat.id)

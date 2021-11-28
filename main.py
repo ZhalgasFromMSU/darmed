@@ -14,7 +14,7 @@ def main():
             TScenarioItem("Ваш пол?", "sex"),
             TScenarioItem("На каком языке Вам удобнее вести диалог?", "lang"),
             TScenarioItem("Сколько Вам лет?", "age"),
-            TScenarioItem("Какая у Вас проблема из списка?", "type", keyboard_rows=[
+            TScenarioItem("Какая у Вас проблема из списка?", "pr_type", keyboard_rows=[
                 "Уход за кожей",
                 "Уход за волосами",
                 "Питание",
@@ -27,7 +27,7 @@ def main():
                 "Недомогание, слабость",
                 "Проблемы менструального цикла",
             ]),
-            TScenarioItem("Опишите Вашу проблему", "descr"),
+            TScenarioItem("Опишите Вашу проблему", "pr_descr"),
         ],
         "Ваша зявка на рассмотрении",
     )
