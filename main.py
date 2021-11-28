@@ -33,8 +33,11 @@ def main():
     )
     bot.register_initial_action(scenario.get_scenario_beginning())
     bot.start()
-    time.sleep(20)
-    bot.stop()
+    try:
+        while True:
+            time.sleep(100)
+    except KeyboardInterrupt:
+        bot.stop()
 
 
 if __name__ == "__main__":
