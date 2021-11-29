@@ -1,0 +1,22 @@
+version: "3.7"
+
+services:
+  darmed:
+    image: python:3.9
+    command: sh -c "pip3 install psycopg2 sqlalchemy pytelegrambotapi && python3 main.py"
+    working_dir: /darmed
+    volumes:
+      - ./:/darmed
+    environment:
+      BOT_TOKEN: 2104367772:AAEORoNFL3weQss-iwQYP6ZBp_q9E7riA4c
+      DB_RECIPE: postgresql://postgres:123456@db:5432/postgres
+
+  db:
+    image: postgres
+    volumes:
+      - database:/usr/local/var/postgres
+    environment:
+      POSTGRES_PASSWORD: 123456
+
+volumes:
+  database:

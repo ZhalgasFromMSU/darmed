@@ -2,13 +2,15 @@ from __future__ import annotations
 
 import typing
 import sqlalchemy
-from sqlalchemy.sql.elements import BinaryExpression
+import sqlalchemy.exc
 from sqlalchemy import types
+from sqlalchemy.sql.elements import BinaryExpression
 from sqlalchemy.engine import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 import config
+import bot_options
 
 
 Base = declarative_base()
@@ -25,7 +27,10 @@ class TDbClient(Base):
     pr_descr = sqlalchemy.Column(types.Text)
 
     @classmethod
-    def from_dict(cls, chat_id: str, properties: typing.Dict[str, typing.Any]) -> TDbClient:
+    def from_dict(cls, chat_id: int, properties: typing.Dict[str, typing.Any]) -> TDbClient:
+        properties["sex"] = "male" if properties["sex"] == "Мужской" else "female"
+        properties["lang"] = {"Русский": "ru", "Казахский": "kz", "Английский": "en"}[properties["lang"]]
+        properties["pr_type"] = bot_options.PROBLEM_TYPES.index(properties["pr_type"])
         return cls(chat_id=chat_id, **properties)
 
     @staticmethod
@@ -43,7 +48,7 @@ class TDbClient(Base):
 
 class DatabaseHandler():
     def __init__(self):
-        self._db_engine: sqlalchemy.engine.Engine = create_engine(config.DATABASE_RECIPE)
+        self._db_engine: sqlalchemy.engine.Engine = create_engine(config.DATABASE_RECIPE, client_encoding='utf8')
         Base.metadata.create_all(self._db_engine)
         self._Session = sessionmaker(self._db_engine)  # session factory
 
@@ -55,10 +60,14 @@ class DatabaseHandler():
             if getattr(client, col_name) is not None
         ]
 
-    def save_client(self, client: TDbClient):
-        with self._Session() as session:
-            session.add(client)
-            session.commit()
+    def save_client(self, client: TDbClient) -> bool:
+        try:
+            with self._Session() as session:
+                session.add(client)
+                session.commit()
+            return True
+        except sqlalchemy.exc.IntegrityError:
+            return False
 
     def get_client(self, client: TDbClient) -> TDbClient:
         with self._Session() as session:

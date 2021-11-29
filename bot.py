@@ -28,6 +28,9 @@ class TBot(threading.Thread, telebot.TeleBot):
     def chat_state(self):
         return self._chat_state
 
+    def pop_from_chat_state(self, chat_id: int) -> typing.Optional[typing.Dict[str, typing.Any]]:
+        return self._chat_state.pop(chat_id, None)
+
     def register_initial_action(self, callback: typing.Callable[[types.Message], None]):
         """What should be done after user sends "/start"
         """
