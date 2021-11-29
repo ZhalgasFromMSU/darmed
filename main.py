@@ -36,7 +36,6 @@ def main():
         while True:
             time.sleep(100)
     except KeyboardInterrupt:
-        print("zdes2")
         bot.stop()
 
 
